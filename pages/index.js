@@ -76,6 +76,20 @@ export default function Home() {
   const [editSelPlats, setEditSelPlats] = useState([]);
   const [saveEditLoading, setSaveEditLoading] = useState(false);
 
+  // ── SOW tab
+  const [sowRows, setSowRows] = useState([]);
+  const [sowLoading, setSowLoading] = useState(false);
+  const [sowPin, setSowPin] = useState("");
+  const [sowUnlocked, setSowUnlocked] = useState(false);
+  const [sowPinErr, setSowPinErr] = useState("");
+  const [sowFilterStatus, setSowFilterStatus] = useState("");
+  const [sowFilterPriority, setSowFilterPriority] = useState("");
+  const [sowDateFrom, setSowDateFrom] = useState("");
+  const [sowDateTo, setSowDateTo] = useState("");
+  const [sowEditRow, setSowEditRow] = useState(null); // row being edited
+  const [sowSaving, setSowSaving] = useState(false);
+  const [sowAddMode, setSowAddMode] = useState(false);
+
   // ── LOAD ──────────────────────────────────────────────────
   async function loadAll() {
     setLoading(true);
@@ -88,6 +102,42 @@ export default function Home() {
       if(pr.ok) setPosts(pr.posts);
     } catch(e) { toast("Failed to load data."); }
     setLoading(false);
+  }
+
+  async function loadSOW() {
+    setSowLoading(true);
+    try {
+      const r = await fetch("/api/sow").then(x=>x.json());
+      if(r.ok) setSowRows(r.rows);
+    } catch { toast("Failed to load SOW."); }
+    setSowLoading(false);
+  }
+
+  function tryUnlockSOW() {
+    if(sowPin === "11111") { setSowUnlocked(true); setSowPinErr(""); setSowPin(""); }
+    else { setSowPinErr("Incorrect PIN."); }
+  }
+
+  async function saveSowRow(row) {
+    setSowSaving(true);
+    try {
+      const r = await fetch("/api/sow",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({sowPin:"11111",row})}).then(x=>x.json());
+      if(!r.ok){ toast("Error: "+r.error); setSowSaving(false); return; }
+      toast("SOW updated!"); setSowEditRow(null); setSowAddMode(false);
+      await loadSOW();
+    } catch { toast("Failed to save."); }
+    setSowSaving(false);
+  }
+
+  async function deleteSowRow(id, name) {
+    if(!confirm(`Remove "${name}" from SOW? This cannot be undone.`)) return;
+    try {
+      const r = await fetch("/api/sow",{method:"DELETE",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({sowPin:"11111",id})}).then(x=>x.json());
+      if(!r.ok){ toast("Error: "+r.error); return; }
+      toast(`"${name}" removed from SOW.`); await loadSOW();
+    } catch { toast("Failed to delete."); }
   }
 
   // ── AUTH ──────────────────────────────────────────────────
@@ -312,10 +362,10 @@ export default function Home() {
           </div>
         </div>
         <div className="nav-bar">
-          {["overview","new","clients"].map((t,i)=>(
-            <div key={t} className={`nav-item ${activeTab===t?"active":""}`} onClick={()=>setActiveTab(t)}>
-              <i className={`ti ${["ti-chart-bar","ti-plus","ti-users"][i]}`}></i>
-              {["Overview","New post","Clients & Platforms"][i]}
+          {["overview","new","clients","sow"].map((t,i)=>(
+            <div key={t} className={`nav-item ${activeTab===t?"active":""}`} onClick={()=>{ setActiveTab(t); if(t==="sow"&&sowRows.length===0) loadSOW(); }}>
+              <i className={`ti ${["ti-chart-bar","ti-plus","ti-users","ti-file-text"][i]}`}></i>
+              {["Overview","New post","Clients & Platforms","SOW"][i]}
             </div>
           ))}
         </div>
@@ -474,6 +524,99 @@ export default function Home() {
                 );
               })
             }
+          </div>
+        )}
+
+        )}
+
+        {/* SOW TAB */}
+        {activeTab==="sow" && (
+          <div className="content">
+            {/* Lock/unlock bar */}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"1rem",flexWrap:"wrap",gap:8}}>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <i className="ti ti-file-text" style={{fontSize:16,color:"#185FA5"}}></i>
+                <span style={{fontWeight:500,fontSize:14}}>Scope of Work</span>
+                {sowUnlocked
+                  ? <span style={{fontSize:11,background:"#F0FDF4",color:"#166534",border:"0.5px solid #86EFAC",padding:"2px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti ti-lock-open" style={{fontSize:11}}></i>Edit mode</span>
+                  : <span style={{fontSize:11,background:"#FFFBEB",color:"#92400E",border:"0.5px solid #FDE68A",padding:"2px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti ti-lock" style={{fontSize:11}}></i>Read only</span>}
+              </div>
+              {!sowUnlocked && (
+                <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                  <input type="password" value={sowPin} onChange={e=>setSowPin(e.target.value)} placeholder="SOW PIN"
+                    onKeyDown={e=>e.key==="Enter"&&tryUnlockSOW()}
+                    style={{padding:"5px 9px",fontSize:12,border:"0.5px solid #ddd",borderRadius:7,width:110}}/>
+                  <button className="btn btn-sm btn-primary" onClick={tryUnlockSOW}><i className="ti ti-lock-open"></i> Unlock</button>
+                  {sowPinErr && <span style={{fontSize:11,color:"#DC2626"}}>{sowPinErr}</span>}
+                </div>
+              )}
+              {sowUnlocked && (
+                <div style={{display:"flex",gap:6}}>
+                  <button className="btn btn-sm btn-primary" onClick={()=>{ setSowAddMode(true); setSowEditRow({id:Date.now().toString(),clientName:"",serviceType:"",keywords:"",backlinks:"",seoTasks:"",creativesRequired:"",priority:"B",status:"Active",startDate:"",endDate:"",notes:""}); }}><i className="ti ti-plus"></i> Add client</button>
+                  <button className="btn btn-sm" onClick={()=>setSowUnlocked(false)}><i className="ti ti-lock"></i> Lock</button>
+                </div>
+              )}
+            </div>
+
+            {/* Filters */}
+            <div className="filter-row" style={{marginBottom:"1rem"}}>
+              <select value={sowFilterStatus} onChange={e=>setSowFilterStatus(e.target.value)} style={{flex:"0 0 130px"}}>
+                <option value="">All statuses</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <select value={sowFilterPriority} onChange={e=>setSowFilterPriority(e.target.value)} style={{flex:"0 0 130px"}}>
+                <option value="">All priorities</option>
+                {["A","B","C","D"].map(p=><option key={p}>Priority {p}</option>)}
+              </select>
+              <div style={{display:"flex",alignItems:"center",gap:6,flex:1,flexWrap:"wrap"}}>
+                <span style={{fontSize:12,color:"#888",whiteSpace:"nowrap"}}>Start date:</span>
+                <input type="date" value={sowDateFrom} onChange={e=>setSowDateFrom(e.target.value)} style={{padding:"5px 8px",fontSize:12,border:"0.5px solid #ddd",borderRadius:7,flex:1,minWidth:110}}/>
+                <span style={{fontSize:12,color:"#888"}}>to</span>
+                <input type="date" value={sowDateTo} onChange={e=>setSowDateTo(e.target.value)} style={{padding:"5px 8px",fontSize:12,border:"0.5px solid #ddd",borderRadius:7,flex:1,minWidth:110}}/>
+                {(sowDateFrom||sowDateTo) && <button className="btn btn-sm" onClick={()=>{setSowDateFrom("");setSowDateTo("");}}>Clear</button>}
+              </div>
+            </div>
+
+            {/* Stats row */}
+            {sowRows.length>0 && (
+              <div style={{display:"flex",gap:8,marginBottom:"1rem",flexWrap:"wrap"}}>
+                {[
+                  {label:"Total clients",val:sowRows.length,color:"#185FA5"},
+                  {label:"Active",val:sowRows.filter(r=>r.status==="Active").length,color:"#16A34A"},
+                  {label:"Inactive",val:sowRows.filter(r=>r.status==="Inactive").length,color:"#888"},
+                  {label:"Priority A",val:sowRows.filter(r=>r.priority==="A").length,color:"#DC2626"},
+                  {label:"Priority B",val:sowRows.filter(r=>r.priority==="B").length,color:"#D97706"},
+                ].map(s=>(
+                  <div key={s.label} style={{background:"#fff",border:"0.5px solid #e5e5e5",borderRadius:8,padding:"8px 14px",textAlign:"center",minWidth:80}}>
+                    <div style={{fontSize:18,fontWeight:500,color:s.color}}>{s.val}</div>
+                    <div style={{fontSize:10,color:"#888",marginTop:1}}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add row form */}
+            {sowAddMode && sowEditRow && (
+              <SOWEditForm row={sowEditRow} setRow={setSowEditRow} onSave={saveSowRow} onCancel={()=>{setSowAddMode(false);setSowEditRow(null);}} saving={sowSaving} isNew={true}/>
+            )}
+
+            {/* SOW Table */}
+            {sowLoading ? <div className="loading"><span className="spinner"></span>Loading SOW...</div> : (() => {
+              const filtered = sowRows.filter(r=>{
+                if(sowFilterStatus && r.status!==sowFilterStatus) return false;
+                if(sowFilterPriority && r.priority!==sowFilterPriority.replace("Priority ","")) return false;
+                if(sowDateFrom && r.startDate && r.startDate < sowDateFrom) return false;
+                if(sowDateTo && r.startDate && r.startDate > sowDateTo) return false;
+                return true;
+              });
+              if(!filtered.length) return <div className="empty"><i className="ti ti-file-off"></i>No SOW records match this filter.</div>;
+              return filtered.map(row=>{
+                const isEditing = sowUnlocked && sowEditRow?.id===row.id && !sowAddMode;
+                if(isEditing) return <SOWEditForm key={row.id} row={sowEditRow} setRow={setSowEditRow} onSave={saveSowRow} onCancel={()=>setSowEditRow(null)} saving={sowSaving} isNew={false}/>;
+                return <SOWCard key={row.id} row={row} unlocked={sowUnlocked} onEdit={()=>setSowEditRow({...row})} onDelete={()=>deleteSowRow(row.id,row.clientName)}/>;
+              });
+            })()}
           </div>
         )}
 
@@ -676,6 +819,85 @@ function PostingCard({p, onMark}) {
           <input type="text" value={names[p.id]||""} onChange={e=>setNames({...names,[p.id]:e.target.value})} placeholder="Enter your name before checking off"/>
         </div>
       )}
+    </div>
+  );
+}
+
+function SOWCard({row, unlocked, onEdit, onDelete}) {
+  const priorityColors = {A:{bg:"#FEF2F2",color:"#991B1B"},B:{bg:"#FFFBEB",color:"#92400E"},C:{bg:"#EFF6FF",color:"#1D4ED8"},D:{bg:"#f5f5f5",color:"#555"}};
+  const pc = priorityColors[row.priority]||priorityColors.D;
+  const isActive = row.status==="Active";
+  return (
+    <div style={{background:"#fff",border:"0.5px solid #e5e5e5",borderRadius:10,padding:"10px 14px",marginBottom:8,display:"flex",gap:12,alignItems:"flex-start",flexWrap:"wrap"}}>
+      <div style={{flex:"0 0 auto",display:"flex",flexDirection:"column",gap:5,alignItems:"flex-start",minWidth:140}}>
+        <div style={{fontWeight:500,fontSize:14}}>{row.clientName}</div>
+        <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+          <span style={{fontSize:10,padding:"2px 8px",borderRadius:20,fontWeight:500,...pc}}>Priority {row.priority}</span>
+          <span style={{fontSize:10,padding:"2px 8px",borderRadius:20,fontWeight:500,background:isActive?"#F0FDF4":"#f5f5f5",color:isActive?"#166534":"#888"}}>{row.status}</span>
+        </div>
+      </div>
+      <div style={{flex:1,minWidth:180}}>
+        <div style={{fontSize:12,color:"#888",marginBottom:3}}>Service type</div>
+        <div style={{fontSize:13}}>{row.serviceType||"—"}</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"6px 14px",flex:"0 0 280px",minWidth:200}}>
+        {[
+          ["Keywords",row.keywords],["Backlinks/mo",row.backlinks],["SEO tasks",row.seoTasks],
+          ["Creatives",row.creativesRequired],["Start date",row.startDate||"—"],["End date",row.endDate||"—"],
+        ].map(([label,val])=>(
+          <div key={label}>
+            <div style={{fontSize:10,color:"#888",textTransform:"uppercase",letterSpacing:".04em"}}>{label}</div>
+            <div style={{fontSize:12,fontWeight:500,marginTop:1}}>{val||"—"}</div>
+          </div>
+        ))}
+      </div>
+      {row.notes && <div style={{flex:"1 0 100%",fontSize:12,color:"#666",background:"#f9f9f9",borderRadius:6,padding:"6px 9px",marginTop:4}}><i className="ti ti-notes" style={{fontSize:12,verticalAlign:-1,marginRight:4}}></i>{row.notes}</div>}
+      {unlocked && (
+        <div style={{display:"flex",gap:5,flexShrink:0,alignSelf:"flex-start"}}>
+          <button className="btn btn-sm" onClick={onEdit}><i className="ti ti-edit"></i> Edit</button>
+          <button className="btn btn-sm btn-danger" onClick={onDelete}><i className="ti ti-trash"></i></button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SOWEditForm({row, setRow, onSave, onCancel, saving, isNew}) {
+  const f = (field) => ({value:row[field]||"",onChange:e=>setRow({...row,[field]:e.target.value})});
+  return (
+    <div style={{background:"#f9f9f9",border:"1px solid #185FA5",borderRadius:10,padding:"14px",marginBottom:10}}>
+      <div style={{fontWeight:500,fontSize:13,marginBottom:10,color:"#185FA5"}}>{isNew?"Add new SOW entry":"Edit SOW entry"}</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+        <div className="form-group" style={{marginBottom:0}}><label>Client name</label><input type="text" {...f("clientName")}/></div>
+        <div className="form-group" style={{marginBottom:0}}><label>Service type</label><input type="text" {...f("serviceType")}/></div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:10}}>
+        <div className="form-group" style={{marginBottom:0}}><label>Keywords</label><input type="text" {...f("keywords")}/></div>
+        <div className="form-group" style={{marginBottom:0}}><label>Backlinks/mo</label><input type="text" {...f("backlinks")}/></div>
+        <div className="form-group" style={{marginBottom:0}}><label>SEO tasks</label><input type="text" {...f("seoTasks")}/></div>
+        <div className="form-group" style={{marginBottom:0}}><label>Creatives</label><input type="text" {...f("creativesRequired")}/></div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:10}}>
+        <div className="form-group" style={{marginBottom:0}}><label>Priority</label>
+          <select {...f("priority")}>
+            {["A","B","C","D"].map(p=><option key={p}>{p}</option>)}
+          </select>
+        </div>
+        <div className="form-group" style={{marginBottom:0}}><label>Status</label>
+          <select {...f("status")}>
+            <option>Active</option><option>Inactive</option>
+          </select>
+        </div>
+        <div className="form-group" style={{marginBottom:0}}><label>Start date</label><input type="date" {...f("startDate")}/></div>
+        <div className="form-group" style={{marginBottom:0}}><label>End date</label><input type="date" {...f("endDate")}/></div>
+      </div>
+      <div className="form-group" style={{marginBottom:10}}><label>Notes</label><input type="text" {...f("notes")} placeholder="Any additional notes..."/></div>
+      <div style={{display:"flex",justifyContent:"flex-end",gap:8}}>
+        <button className="btn btn-sm" onClick={onCancel}>Cancel</button>
+        <button className="btn btn-sm btn-primary" onClick={()=>onSave(row)} disabled={saving}>
+          {saving?<><span className="spinner"></span> Saving...</>:<><i className="ti ti-check"></i> {isNew?"Add entry":"Save changes"}</>}
+        </button>
+      </div>
     </div>
   );
 }
