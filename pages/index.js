@@ -404,7 +404,7 @@ export default function Home() {
         </div>
         <div className="nav-bar">
           {["overview","new","clients","sow"].map((t,i)=>(
-            <div key={t} className={`nav-item ${activeTab===t?"active":""}`} onClick={()=>{ setActiveTab(t); if(t==="sow"&&sowRows.length===0) loadSOW(); }}>
+            <div key={t} className={`nav-item ${activeTab===t?"active":""}`} onClick={()=>{ setActiveTab(t); if(t==="sow") { loadSOW(); fetch("/api/posts").then(r=>r.json()).then(pr=>{ if(pr.ok) setPosts(pr.posts); }); } }}>
               <i className={`ti ${["ti-chart-bar","ti-plus","ti-users","ti-file-text"][i]}`}></i>
               {["Overview","New post","Clients & Platforms","SOW"][i]}
             </div>
