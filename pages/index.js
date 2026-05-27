@@ -130,6 +130,16 @@ export default function Home() {
     setSowSaving(false);
   }
 
+  async function saveTrackerVal(clientId, month, made) {
+    try {
+      const r = await fetch("/api/sow",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({sowPin:"11111",tracker:{clientId,month,made}})}).then(x=>x.json());
+      if(!r.ok){ toast("Error: "+r.error); return; }
+      setSowRows(prev=>prev.map(row=>row.id===clientId?{...row,tracker:{...row.tracker,[month]:made}}:row));
+      toast("Creative count updated!");
+    } catch { toast("Failed to update tracker."); }
+  }
+
   async function deleteSowRow(id, name) {
     if(!confirm(`Remove "${name}" from SOW? This cannot be undone.`)) return;
     try {
@@ -532,7 +542,7 @@ export default function Home() {
         {/* SOW TAB */}
         {activeTab==="sow" && (
           <div className="content">
-            {/* Lock/unlock bar */}
+            {/* Header row */}
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"1rem",flexWrap:"wrap",gap:8}}>
               <div style={{display:"flex",alignItems:"center",gap:8}}>
                 <i className="ti ti-file-text" style={{fontSize:16,color:"#185FA5"}}></i>
@@ -541,81 +551,148 @@ export default function Home() {
                   ? <span style={{fontSize:11,background:"#F0FDF4",color:"#166534",border:"0.5px solid #86EFAC",padding:"2px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti ti-lock-open" style={{fontSize:11}}></i>Edit mode</span>
                   : <span style={{fontSize:11,background:"#FFFBEB",color:"#92400E",border:"0.5px solid #FDE68A",padding:"2px 10px",borderRadius:20,display:"flex",alignItems:"center",gap:4}}><i className="ti ti-lock" style={{fontSize:11}}></i>Read only</span>}
               </div>
-              {!sowUnlocked && (
-                <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                  <input type="password" value={sowPin} onChange={e=>setSowPin(e.target.value)} placeholder="SOW PIN"
-                    onKeyDown={e=>e.key==="Enter"&&tryUnlockSOW()}
-                    style={{padding:"5px 9px",fontSize:12,border:"0.5px solid #ddd",borderRadius:7,width:110}}/>
-                  <button className="btn btn-sm btn-primary" onClick={tryUnlockSOW}><i className="ti ti-lock-open"></i> Unlock</button>
-                  {sowPinErr && <span style={{fontSize:11,color:"#DC2626"}}>{sowPinErr}</span>}
-                </div>
-              )}
-              {sowUnlocked && (
-                <div style={{display:"flex",gap:6}}>
-                  <button className="btn btn-sm btn-primary" onClick={()=>{ setSowAddMode(true); setSowEditRow({id:Date.now().toString(),clientName:"",serviceType:"",keywords:"",backlinks:"",seoTasks:"",creativesRequired:"",priority:"B",status:"Active",startDate:"",endDate:"",notes:""}); }}><i className="ti ti-plus"></i> Add client</button>
-                  <button className="btn btn-sm" onClick={()=>setSowUnlocked(false)}><i className="ti ti-lock"></i> Lock</button>
-                </div>
-              )}
+              {!sowUnlocked
+                ? <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                    <input type="password" value={sowPin} onChange={e=>setSowPin(e.target.value)} placeholder="SOW PIN"
+                      onKeyDown={e=>e.key==="Enter"&&tryUnlockSOW()}
+                      style={{padding:"5px 9px",fontSize:12,border:"1px solid #ddd",borderRadius:7,width:110}}/>
+                    <button className="btn btn-sm btn-primary" onClick={tryUnlockSOW}><i className="ti ti-lock-open"></i> Unlock</button>
+                    {sowPinErr && <span style={{fontSize:11,color:"#DC2626"}}>{sowPinErr}</span>}
+                  </div>
+                : <div style={{display:"flex",gap:6}}>
+                    <button className="btn btn-sm btn-primary" onClick={()=>{setSowAddMode(true);setSowEditRow({id:Date.now().toString(),clientName:"",serviceType:"",creativesRequired:"",priority:"B",status:"Active"});}}><i className="ti ti-plus"></i> Add client</button>
+                    <button className="btn btn-sm" onClick={()=>setSowUnlocked(false)}><i className="ti ti-lock"></i> Lock</button>
+                  </div>}
             </div>
 
             {/* Filters */}
-            <div className="filter-row" style={{marginBottom:"1rem"}}>
-              <select value={sowFilterStatus} onChange={e=>setSowFilterStatus(e.target.value)} style={{flex:"0 0 130px"}}>
+            <div className="filter-row">
+              <select value={sowFilterStatus} onChange={e=>setSowFilterStatus(e.target.value)}>
                 <option value="">All statuses</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
-              <select value={sowFilterPriority} onChange={e=>setSowFilterPriority(e.target.value)} style={{flex:"0 0 130px"}}>
+              <select value={sowFilterPriority} onChange={e=>setSowFilterPriority(e.target.value)}>
                 <option value="">All priorities</option>
-                {["A","B","C","D"].map(p=><option key={p}>Priority {p}</option>)}
+                {["A","B","C","D"].map(p=><option key={p} value={p}>Priority {p}</option>)}
               </select>
               <div style={{display:"flex",alignItems:"center",gap:6,flex:1,flexWrap:"wrap"}}>
-                <span style={{fontSize:12,color:"#888",whiteSpace:"nowrap"}}>Start date:</span>
-                <input type="date" value={sowDateFrom} onChange={e=>setSowDateFrom(e.target.value)} style={{padding:"5px 8px",fontSize:12,border:"0.5px solid #ddd",borderRadius:7,flex:1,minWidth:110}}/>
-                <span style={{fontSize:12,color:"#888"}}>to</span>
-                <input type="date" value={sowDateTo} onChange={e=>setSowDateTo(e.target.value)} style={{padding:"5px 8px",fontSize:12,border:"0.5px solid #ddd",borderRadius:7,flex:1,minWidth:110}}/>
-                {(sowDateFrom||sowDateTo) && <button className="btn btn-sm" onClick={()=>{setSowDateFrom("");setSowDateTo("");}}>Clear</button>}
+                <span style={{fontSize:12,color:"#888",whiteSpace:"nowrap"}}>View month:</span>
+                <input type="month" value={sowDateFrom} onChange={e=>setSowDateFrom(e.target.value)}
+                  style={{padding:"5px 8px",fontSize:12,border:"1px solid #ddd",borderRadius:7,flex:1,minWidth:130,background:"#fff",color:"#1a1a1a"}}/>
+                {sowDateFrom && <button className="btn btn-sm" onClick={()=>setSowDateFrom("")}>Clear</button>}
               </div>
             </div>
 
-            {/* Stats row */}
-            {sowRows.length>0 && (
-              <div style={{display:"flex",gap:8,marginBottom:"1rem",flexWrap:"wrap"}}>
-                {[
-                  {label:"Total clients",val:sowRows.length,color:"#185FA5"},
-                  {label:"Active",val:sowRows.filter(r=>r.status==="Active").length,color:"#16A34A"},
-                  {label:"Inactive",val:sowRows.filter(r=>r.status==="Inactive").length,color:"#888"},
-                  {label:"Priority A",val:sowRows.filter(r=>r.priority==="A").length,color:"#DC2626"},
-                  {label:"Priority B",val:sowRows.filter(r=>r.priority==="B").length,color:"#D97706"},
-                ].map(s=>(
-                  <div key={s.label} style={{background:"#fff",border:"0.5px solid #e5e5e5",borderRadius:8,padding:"8px 14px",textAlign:"center",minWidth:80}}>
-                    <div style={{fontSize:18,fontWeight:500,color:s.color}}>{s.val}</div>
-                    <div style={{fontSize:10,color:"#888",marginTop:1}}>{s.label}</div>
-                  </div>
-                ))}
-              </div>
-            )}
+            {/* Summary stats */}
+            {sowRows.length>0 && (()=>{
+              const active = sowRows.filter(r=>r.status==="Active");
+              const totalRequired = active.reduce((s,r)=>{const n=parseInt(r.creativesRequired);return s+(isNaN(n)?0:n);},0);
+              const curMonth = sowDateFrom || new Date().toISOString().slice(0,7);
+              const totalMade = active.reduce((s,r)=>s+(r.tracker[curMonth]||0),0);
+              const pct = totalRequired>0?Math.round(totalMade/totalRequired*100):0;
+              return (
+                <div style={{display:"flex",gap:8,marginBottom:"1rem",flexWrap:"wrap",alignItems:"stretch"}}>
+                  {[
+                    {label:"Active clients",val:active.length,color:"#185FA5"},
+                    {label:"Creatives required",val:totalRequired,color:"#1a1a1a"},
+                    {label:`Made (${curMonth})`,val:totalMade,color:totalMade>=totalRequired?"#16A34A":"#D97706"},
+                    {label:"Completion",val:`${pct}%`,color:pct>=100?"#16A34A":pct>=50?"#D97706":"#DC2626"},
+                  ].map(s=>(
+                    <div key={s.label} style={{background:"#fff",border:"1px solid #e5e5e5",borderRadius:8,padding:"8px 14px",textAlign:"center",flex:"1 0 70px"}}>
+                      <div style={{fontSize:20,fontWeight:600,color:s.color}}>{s.val}</div>
+                      <div style={{fontSize:10,color:"#888",marginTop:1}}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
 
-            {/* Add row form */}
+            {/* Add form */}
             {sowAddMode && sowEditRow && (
               <SOWEditForm row={sowEditRow} setRow={setSowEditRow} onSave={saveSowRow} onCancel={()=>{setSowAddMode(false);setSowEditRow(null);}} saving={sowSaving} isNew={true}/>
             )}
 
-            {/* SOW Table */}
-            {sowLoading ? <div className="loading"><span className="spinner"></span>Loading SOW...</div> : (() => {
+            {/* Table */}
+            {sowLoading ? <div className="loading"><span className="spinner"></span>Loading SOW...</div> : (()=>{
+              const curMonth = sowDateFrom || new Date().toISOString().slice(0,7);
               const filtered = sowRows.filter(r=>{
                 if(sowFilterStatus && r.status!==sowFilterStatus) return false;
-                if(sowFilterPriority && r.priority!==sowFilterPriority.replace("Priority ","")) return false;
-                if(sowDateFrom && r.startDate && r.startDate < sowDateFrom) return false;
-                if(sowDateTo && r.startDate && r.startDate > sowDateTo) return false;
+                if(sowFilterPriority && r.priority!==sowFilterPriority) return false;
                 return true;
               });
-              if(!filtered.length) return <div className="empty"><i className="ti ti-file-off"></i>No SOW records match this filter.</div>;
-              return filtered.map(row=>{
-                const isEditing = sowUnlocked && sowEditRow?.id===row.id && !sowAddMode;
-                if(isEditing) return <SOWEditForm key={row.id} row={sowEditRow} setRow={setSowEditRow} onSave={saveSowRow} onCancel={()=>setSowEditRow(null)} saving={sowSaving} isNew={false}/>;
-                return <SOWCard key={row.id} row={row} unlocked={sowUnlocked} onEdit={()=>setSowEditRow({...row})} onDelete={()=>deleteSowRow(row.id,row.clientName)}/>;
-              });
+              if(!filtered.length) return <div className="empty"><i className="ti ti-file-off"></i>No records match this filter.</div>;
+              const priColors = {A:{bg:"#DCFCE7",color:"#166534"},B:"#BFDBFE|#1E40AF",C:{bg:"#FEF9C3",color:"#854D0E"},D:{bg:"#FCE7F3",color:"#9D174D"}};
+              const priStyle = {
+                A:{background:"#DCFCE7",color:"#166534"},
+                B:{background:"#BFDBFE",color:"#1E40AF"},
+                C:{background:"#FEF9C3",color:"#854D0E"},
+                D:{background:"#FCE7F3",color:"#9D174D"},
+              };
+              const totalReq = filtered.filter(r=>r.status==="Active").reduce((s,r)=>{const n=parseInt(r.creativesRequired);return s+(isNaN(n)?0:n);},0);
+              return (
+                <div style={{background:"#fff",border:"1px solid #e5e5e5",borderRadius:12,overflow:"hidden"}}>
+                  {/* Table header */}
+                  <div style={{display:"grid",gridTemplateColumns:"2fr 2.5fr 1fr 1fr 1fr 1.2fr",gap:0,background:"#185FA5",padding:"8px 14px",alignItems:"center"}}>
+                    {["Client Name","Service Type","Creatives Req.","Priority","Status",`Made — ${curMonth}`].map(h=>(
+                      <div key={h} style={{fontSize:11,fontWeight:600,color:"#fff",letterSpacing:".02em"}}>{h}</div>
+                    ))}
+                  </div>
+                  {/* Rows */}
+                  {filtered.map((row,i)=>{
+                    const isEditing = sowUnlocked && sowEditRow?.id===row.id && !sowAddMode;
+                    if(isEditing) return (
+                      <div key={row.id} style={{padding:"0",borderTop:"1px solid #e5e5e5"}}>
+                        <SOWEditForm row={sowEditRow} setRow={setSowEditRow} onSave={saveSowRow} onCancel={()=>setSowEditRow(null)} saving={sowSaving} isNew={false}/>
+                      </div>
+                    );
+                    const made = row.tracker[curMonth]||0;
+                    const req = parseInt(row.creativesRequired);
+                    const hasTarget = !isNaN(req) && req>0;
+                    const over = hasTarget && made>=req;
+                    const [trackerEditing, setTrackerEditing] = useState(false);
+                    const [trackerVal, setTrackerVal] = useState(String(made));
+                    return (
+                      <div key={row.id} style={{display:"grid",gridTemplateColumns:"2fr 2.5fr 1fr 1fr 1fr 1.2fr",gap:0,padding:"9px 14px",alignItems:"center",borderTop:i===0?"none":"1px solid #f0f0f0",background:i%2===0?"#fff":"#fafafa"}}>
+                        <div style={{fontWeight:500,fontSize:13}}>{row.clientName}</div>
+                        <div style={{fontSize:12,color:"#555"}}>{row.serviceType}</div>
+                        <div style={{fontSize:13,fontWeight:600,color:"#1a1a1a"}}>{row.creativesRequired}</div>
+                        <div><span style={{fontSize:11,fontWeight:600,padding:"2px 9px",borderRadius:20,...(priStyle[row.priority]||priStyle.D)}}>{row.priority}</span></div>
+                        <div><span style={{fontSize:11,padding:"2px 8px",borderRadius:20,background:row.status==="Active"?"#F0FDF4":"#f5f5f5",color:row.status==="Active"?"#166534":"#888"}}>{row.status}</span></div>
+                        <div style={{display:"flex",alignItems:"center",gap:6}}>
+                          {trackerEditing
+                            ? <><input type="number" value={trackerVal} onChange={e=>setTrackerVal(e.target.value)} min="0"
+                                style={{width:52,padding:"3px 6px",fontSize:12,border:"1px solid #185FA5",borderRadius:6,background:"#EBF4FF"}}
+                                onKeyDown={async e=>{if(e.key==="Enter"){await saveTrackerVal(row.id,curMonth,parseInt(trackerVal)||0);setTrackerEditing(false);}if(e.key==="Escape")setTrackerEditing(false);}}/> 
+                              <button className="btn btn-sm btn-primary" style={{padding:"3px 7px",fontSize:11}} onClick={async()=>{await saveTrackerVal(row.id,curMonth,parseInt(trackerVal)||0);setTrackerEditing(false);}}>✓</button>
+                              <button className="btn btn-sm" style={{padding:"3px 7px",fontSize:11}} onClick={()=>setTrackerEditing(false)}>✕</button>
+                            </>
+                            : <><span style={{fontSize:13,fontWeight:600,color:over?"#16A34A":made>0?"#D97706":"#aaa",minWidth:22}}>{made}</span>
+                              {hasTarget && <span style={{fontSize:10,color:"#aaa"}}>/ {req}</span>}
+                              {hasTarget && <div style={{flex:1,height:4,background:"#f0f0f0",borderRadius:4,overflow:"hidden",minWidth:30}}>
+                                <div style={{height:"100%",width:`${Math.min(100,Math.round(made/req*100))}%`,background:over?"#16A34A":made>0?"#D97706":"#e5e5e5",borderRadius:4}}></div>
+                              </div>}
+                              <button onClick={()=>{setTrackerVal(String(made));setTrackerEditing(true);}} style={{background:"none",border:"none",cursor:"pointer",color:"#aaa",padding:0,fontSize:13,lineHeight:1}} title="Update count"><i className="ti ti-pencil" style={{fontSize:12}}></i></button>
+                              {sowUnlocked && <><button className="btn btn-sm" style={{padding:"3px 7px",fontSize:11,marginLeft:2}} onClick={()=>setSowEditRow({...row})}><i className="ti ti-edit" style={{fontSize:10}}></i></button>
+                              <button className="btn btn-sm btn-danger" style={{padding:"3px 7px",fontSize:11}} onClick={()=>deleteSowRow(row.id,row.clientName)}><i className="ti ti-trash" style={{fontSize:10}}></i></button></>}
+                            </>}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {/* Totals row */}
+                  <div style={{display:"grid",gridTemplateColumns:"2fr 2.5fr 1fr 1fr 1fr 1.2fr",gap:0,padding:"9px 14px",background:"#FFF9C4",borderTop:"2px solid #D97706",alignItems:"center"}}>
+                    <div style={{fontWeight:700,fontSize:13,color:"#1a1a1a"}}>TOTALS</div>
+                    <div></div>
+                    <div style={{fontWeight:700,fontSize:13,color:"#1a1a1a"}}>{totalReq}</div>
+                    <div></div><div></div>
+                    <div style={{fontWeight:700,fontSize:13,color:"#1a1a1a"}}>
+                      {filtered.filter(r=>r.status==="Active").reduce((s,r)=>s+(r.tracker[curMonth]||0),0)}
+                      <span style={{fontSize:10,color:"#888",fontWeight:400,marginLeft:4}}>made</span>
+                    </div>
+                  </div>
+                </div>
+              );
             })()}
           </div>
         )}
@@ -823,79 +900,28 @@ function PostingCard({p, onMark}) {
   );
 }
 
-function SOWCard({row, unlocked, onEdit, onDelete}) {
-  const priorityColors = {A:{bg:"#FEF2F2",color:"#991B1B"},B:{bg:"#FFFBEB",color:"#92400E"},C:{bg:"#EFF6FF",color:"#1D4ED8"},D:{bg:"#f5f5f5",color:"#555"}};
-  const pc = priorityColors[row.priority]||priorityColors.D;
-  const isActive = row.status==="Active";
-  return (
-    <div style={{background:"#fff",border:"0.5px solid #e5e5e5",borderRadius:10,padding:"10px 14px",marginBottom:8,display:"flex",gap:12,alignItems:"flex-start",flexWrap:"wrap"}}>
-      <div style={{flex:"0 0 auto",display:"flex",flexDirection:"column",gap:5,alignItems:"flex-start",minWidth:140}}>
-        <div style={{fontWeight:500,fontSize:14}}>{row.clientName}</div>
-        <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
-          <span style={{fontSize:10,padding:"2px 8px",borderRadius:20,fontWeight:500,...pc}}>Priority {row.priority}</span>
-          <span style={{fontSize:10,padding:"2px 8px",borderRadius:20,fontWeight:500,background:isActive?"#F0FDF4":"#f5f5f5",color:isActive?"#166534":"#888"}}>{row.status}</span>
-        </div>
-      </div>
-      <div style={{flex:1,minWidth:180}}>
-        <div style={{fontSize:12,color:"#888",marginBottom:3}}>Service type</div>
-        <div style={{fontSize:13}}>{row.serviceType||"—"}</div>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"6px 14px",flex:"0 0 280px",minWidth:200}}>
-        {[
-          ["Keywords",row.keywords],["Backlinks/mo",row.backlinks],["SEO tasks",row.seoTasks],
-          ["Creatives",row.creativesRequired],["Start date",row.startDate||"—"],["End date",row.endDate||"—"],
-        ].map(([label,val])=>(
-          <div key={label}>
-            <div style={{fontSize:10,color:"#888",textTransform:"uppercase",letterSpacing:".04em"}}>{label}</div>
-            <div style={{fontSize:12,fontWeight:500,marginTop:1}}>{val||"—"}</div>
-          </div>
-        ))}
-      </div>
-      {row.notes && <div style={{flex:"1 0 100%",fontSize:12,color:"#666",background:"#f9f9f9",borderRadius:6,padding:"6px 9px",marginTop:4}}><i className="ti ti-notes" style={{fontSize:12,verticalAlign:-1,marginRight:4}}></i>{row.notes}</div>}
-      {unlocked && (
-        <div style={{display:"flex",gap:5,flexShrink:0,alignSelf:"flex-start"}}>
-          <button className="btn btn-sm" onClick={onEdit}><i className="ti ti-edit"></i> Edit</button>
-          <button className="btn btn-sm btn-danger" onClick={onDelete}><i className="ti ti-trash"></i></button>
-        </div>
-      )}
-    </div>
-  );
-}
-
 function SOWEditForm({row, setRow, onSave, onCancel, saving, isNew}) {
   const f = (field) => ({value:row[field]||"",onChange:e=>setRow({...row,[field]:e.target.value})});
   return (
-    <div style={{background:"#f9f9f9",border:"1px solid #185FA5",borderRadius:10,padding:"14px",marginBottom:10}}>
-      <div style={{fontWeight:500,fontSize:13,marginBottom:10,color:"#185FA5"}}>{isNew?"Add new SOW entry":"Edit SOW entry"}</div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+    <div style={{background:"#EBF4FF",border:"1px solid #185FA5",borderRadius:10,padding:"14px",margin:"4px 0 8px"}}>
+      <div style={{fontWeight:500,fontSize:12,marginBottom:10,color:"#185FA5",display:"flex",alignItems:"center",gap:6}}>
+        <i className="ti ti-edit" style={{fontSize:12}}></i>{isNew?"Add new SOW entry":"Editing entry"}
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
         <div className="form-group" style={{marginBottom:0}}><label>Client name</label><input type="text" {...f("clientName")}/></div>
         <div className="form-group" style={{marginBottom:0}}><label>Service type</label><input type="text" {...f("serviceType")}/></div>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:10}}>
-        <div className="form-group" style={{marginBottom:0}}><label>Keywords</label><input type="text" {...f("keywords")}/></div>
-        <div className="form-group" style={{marginBottom:0}}><label>Backlinks/mo</label><input type="text" {...f("backlinks")}/></div>
-        <div className="form-group" style={{marginBottom:0}}><label>SEO tasks</label><input type="text" {...f("seoTasks")}/></div>
-        <div className="form-group" style={{marginBottom:0}}><label>Creatives</label><input type="text" {...f("creativesRequired")}/></div>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:10}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:8}}>
+        <div className="form-group" style={{marginBottom:0}}><label>Creatives req.</label><input type="text" {...f("creativesRequired")}/></div>
         <div className="form-group" style={{marginBottom:0}}><label>Priority</label>
-          <select {...f("priority")}>
-            {["A","B","C","D"].map(p=><option key={p}>{p}</option>)}
-          </select>
-        </div>
+          <select {...f("priority")}>{["A","B","C","D"].map(p=><option key={p}>{p}</option>)}</select></div>
         <div className="form-group" style={{marginBottom:0}}><label>Status</label>
-          <select {...f("status")}>
-            <option>Active</option><option>Inactive</option>
-          </select>
-        </div>
-        <div className="form-group" style={{marginBottom:0}}><label>Start date</label><input type="date" {...f("startDate")}/></div>
-        <div className="form-group" style={{marginBottom:0}}><label>End date</label><input type="date" {...f("endDate")}/></div>
+          <select {...f("status")}><option>Active</option><option>Inactive</option></select></div>
       </div>
-      <div className="form-group" style={{marginBottom:10}}><label>Notes</label><input type="text" {...f("notes")} placeholder="Any additional notes..."/></div>
       <div style={{display:"flex",justifyContent:"flex-end",gap:8}}>
         <button className="btn btn-sm" onClick={onCancel}>Cancel</button>
         <button className="btn btn-sm btn-primary" onClick={()=>onSave(row)} disabled={saving}>
-          {saving?<><span className="spinner"></span> Saving...</>:<><i className="ti ti-check"></i> {isNew?"Add entry":"Save changes"}</>}
+          {saving?<><span className="spinner"></span> Saving...</>:<><i className="ti ti-check"></i> {isNew?"Add entry":"Save"}</>}
         </button>
       </div>
     </div>
