@@ -303,13 +303,13 @@ export default function Home() {
   if(!role) return (
     <>
       <Head>
-        <title>Content Calendar</title>
+        <title>Postings</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
       </Head>
       <style>{globalCSS}</style>
       <div className="login-wrap">
         <div className="login-card">
-          <h1>Content Calendar</h1>
+          <h1>Postings</h1>
           <p>Select your role and enter your PIN to continue.</p>
           <div className="role-grid">
             <div className={`role-btn ${selectedRole==="pm"?"selected":""}`} onClick={()=>setSelectedRole("pm")}>
@@ -357,7 +357,7 @@ export default function Home() {
 
     return (
       <>
-        <Head><title>PM Dashboard – Content Calendar</title>
+        <Head><title>PM Dashboard – Postings</title>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/></Head>
         <style>{globalCSS}</style>
 
@@ -771,7 +771,7 @@ export default function Home() {
     const filtered = posts.filter(p=>(!postFilterClient||p.client===postFilterClient)&&(postFilterShow==="all"||getStatus(p)!=="done"));
     return (
       <>
-        <Head><title>Posting Team – Content Calendar</title>
+        <Head><title>Posting Team – Postings</title>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/></Head>
         <style>{globalCSS}</style>
         <div className="topbar">
