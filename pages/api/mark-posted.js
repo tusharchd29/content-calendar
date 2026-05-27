@@ -1,4 +1,4 @@
-import { markPlatformPosted, uploadScreenshotToDrive } from "../../lib/sheets";
+import { markPlatformPosted, uploadScreenshot } from "../../lib/sheets";
 
 export const config = { api: { bodyParser: { sizeLimit: "10mb" } } };
 
@@ -8,13 +8,10 @@ export default async function handler(req, res) {
     const { postId, platformName, postedBy, screenshot } = req.body;
     let screenshotLink = null;
 
-    // Upload screenshot to Drive if provided
     if (screenshot && screenshot.data) {
-      screenshotLink = await uploadScreenshotToDrive(
+      screenshotLink = await uploadScreenshot(
         screenshot.data,
-        screenshot.name || `${platformName}_${postId}_${Date.now()}.png`,
-        screenshot.mimeType || "image/png",
-        screenshot.clientName || "General"
+        screenshot.name || `${platformName}_${postId}_${Date.now()}.png`
       );
     }
 
