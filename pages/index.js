@@ -808,12 +808,15 @@ export default function Home() {
             <button className="btn btn-sm" onClick={logout}><i className="ti ti-logout"></i> Sign out</button>
           </div>
         </div>
-        <div className="content" style={{paddingTop:108}}>
-          <div className="stats-grid">
+        <div style={{paddingTop:54}}>
+          <div className="stats-bar">
+            <div className="stats-grid" style={{margin:0}}>
             <div className="stat-card"><div className="stat-num">{total}</div><div className="stat-label">Total</div></div>
             <div className="stat-card"><div className="stat-num" style={{color:"#16A34A"}}>{dn}</div><div className="stat-label">Posted</div></div>
             <div className="stat-card"><div className="stat-num" style={{color:"#D97706"}}>{rem}</div><div className="stat-label">Pending</div></div>
+            </div>
           </div>
+          <div className="content">
           <div className="filter-row">
             <select value={postFilterClient} onChange={e=>setPostFilterClient(e.target.value)}>
               <option value="">All clients</option>
@@ -1182,8 +1185,8 @@ function BgBotanical() {
   return (
     <div className="bg-botanical">
       <svg width="100%" height="100%" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-        <text x="720" y="430" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#7DC242" opacity="0.12" transform="rotate(-15 720 500)">meraki</text>
-        <text x="720" y="590" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#29ABE2" opacity="0.12" transform="rotate(-15 720 500)">ads</text>
+        <text x="780" y="430" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#7DC242" opacity="0.15" transform="rotate(-12 780 500)">meraki</text>
+        <text x="820" y="590" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#29ABE2" opacity="0.15" transform="rotate(-12 820 560)">ads</text>
         <path d="M -10 120 Q 20 70 70 50 Q 60 90 -10 120 Z" fill="#C5E89A" opacity="0.5"/>
         <path d="M -10 120 Q 40 80 70 50" stroke="#7DC242" strokeWidth="1" fill="none" opacity="0.4"/>
         <path d="M 20 150 Q 55 90 100 75 Q 85 115 20 150 Z" fill="#97C459" opacity="0.38"/>
@@ -1350,7 +1353,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .role-btn:hover{border-color:#7DC242}.role-btn.selected{border-color:#7DC242;background:#F3FBE8}
 .role-btn i{font-size:24px;display:block;margin-bottom:6px;color:#ccc}.role-btn.selected i{color:#7DC242}
 .role-btn span{font-size:13px;font-weight:600;display:block;color:#1a1a1a}.role-btn small{font-size:11px;color:#aaa}
-.topbar{background:#fff;border-bottom:1px solid #eee;padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;height:54px;overflow:hidden}
+.topbar{background:#fff;border-bottom:1px solid #eee;padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;height:54px;overflow:hidden}.stats-bar{position:sticky;top:54px;z-index:98;background:#F2F5EE;padding:12px 20px;border-bottom:0.5px solid #e0e0e0}
 .topbar-logo{font-family:'Dancing Script',cursive;font-size:22px;font-weight:600;line-height:1;position:relative;z-index:2}
 .topbar-logo .lm{color:#7DC242}.topbar-logo .la{color:#29ABE2}
 .topbar-botanical{position:absolute;top:0;left:0;width:100%;height:54px;pointer-events:none;z-index:1}
@@ -1364,7 +1367,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .alert-red{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B}.alert-red i{color:#DC2626}
 .alert-amber{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E}.alert-amber i{color:#D97706}
 .alert-green{background:#F3FBE8;border:1px solid #C0DD97;color:#3B6D11}.alert-green i{color:#7DC242}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:0}.stats-bar .stats-grid{grid-template-columns:repeat(3,1fr);max-width:500px;margin:0 auto}
 .stat-card{background:#fff;border:0.5px solid #e8e8e8;border-radius:12px;padding:12px;text-align:center}
 .stat-num{font-size:22px;font-weight:700}.stat-label{font-size:11px;color:#aaa;margin-top:2px}
 .form-card{background:#fff;border:0.5px solid #e8e8e8;border-radius:14px;padding:1.25rem;margin-bottom:1rem}
