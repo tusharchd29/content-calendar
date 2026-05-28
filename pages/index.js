@@ -930,7 +930,7 @@ export default function Home() {
           </div>
           <div className="content">
           {loading ? <div className="loading"><span className="spinner"></span>Loading posts...</div> :
-            filtered.length ? filtered.map(p=><PostingCard key={p.id} p={p} onMark={markPlatform} setPosts={setPosts}/>) :
+            filtered.length ? filtered.map(p=><PostingCard key={p.id} p={p} onMark={markPlatform} setPosts={setPosts} toast={toast}/>) :
             <div className="empty"><i className="ti ti-circle-check"></i>All caught up! Nothing pending.</div>
           }
           </div>
@@ -1102,7 +1102,7 @@ function PlatformRow({pl, i, p, names, onMark, setPosts, toast}) {
   );
 }
 
-function PostingCard({p, onMark, setPosts}) {
+function PostingCard({p, onMark, setPosts, toast}) {
   const s=getStatus(p);
   const [names, setNames] = useState({});
 
