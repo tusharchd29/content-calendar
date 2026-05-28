@@ -837,13 +837,13 @@ export default function Home() {
               style={{padding:"5px 8px",fontSize:12,border:"1px solid #ddd",borderRadius:7,background:"#fff",color:"#1a1a1a"}} title="To date"/>
               {(globalDateFrom||globalDateTo) && <button className="btn btn-sm" onClick={()=>{setGlobalDateFrom("");setGlobalDateTo("");}}>Clear</button>}
             </div>
-          </div>
           <div className="content">
           {loading ? <div className="loading"><span className="spinner"></span>Loading posts...</div> :
             filtered.length ? filtered.map(p=><PostingCard key={p.id} p={p} onMark={markPlatform}/>) :
             <div className="empty"><i className="ti ti-circle-check"></i>All caught up! Nothing pending.</div>
           }
-        </div>
+          </div>
+          </div>
         <Toast msg={toastMsg} show={toastShow}/>
       </>
     );
