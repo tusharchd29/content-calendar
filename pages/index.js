@@ -1010,7 +1010,7 @@ function PMPostCard({p, onEdit, onDelete}) {
   );
 }
 
-function PlatformRow({pl, i, p, names, onMark, setPosts}) {
+function PlatformRow({pl, i, p, names, onMark, setPosts, toast}) {
   const [ssFile, setSsFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [pasting, setPasting] = useState(false);
@@ -1124,7 +1124,7 @@ function PostingCard({p, onMark, setPosts}) {
       <div className="divider"></div>
       <div className="sub-label">Mark as posted</div>
       {p.platforms.map((pl,i)=>(
-        <PlatformRow key={pl.name} pl={pl} i={i} p={p} names={names} onMark={onMark} setPosts={setPosts}/>
+        <PlatformRow key={pl.name} pl={pl} i={i} p={p} names={names} onMark={onMark} setPosts={setPosts} toast={toast}/>
       ))}
       {s!=="done"&&(
         <div className="name-row">
