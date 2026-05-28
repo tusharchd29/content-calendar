@@ -436,35 +436,41 @@ export default function Home() {
           ))}
         </div>
         {activeTab==="overview" && (
+          <div>
+            <div className="stats-bar">
+              <div style={{maxWidth:800,margin:"0 auto"}}>
+                {ov>0 && <div className="alert alert-red" style={{marginBottom:8}}><i className="ti ti-alert-circle"></i><span><strong>{ov} post{ov>1?"s are":" is"} overdue</strong> — scheduled time has passed and not fully posted.</span></div>}
+                {td>0 && <div className="alert alert-amber" style={{marginBottom:8}}><i className="ti ti-clock"></i><span><strong>{td} post{td>1?"s":""} due today</strong> — keep an eye on these.</span></div>}
+                {!ov&&!td && <div className="alert alert-green" style={{marginBottom:8}}><i className="ti ti-circle-check"></i><span>All clear — no overdue or pending posts for today.</span></div>}
+                <div className="stats-grid">
+                  <div className="stat-card"><div className="stat-num" style={{color:"#DC2626"}}>{ov}</div><div className="stat-label">Overdue</div></div>
+                  <div className="stat-card"><div className="stat-num" style={{color:"#D97706"}}>{td}</div><div className="stat-label">Due today</div></div>
+                  <div className="stat-card"><div className="stat-num">{up}</div><div className="stat-label">Upcoming</div></div>
+                  <div className="stat-card"><div className="stat-num" style={{color:"#16A34A"}}>{dn}</div><div className="stat-label">Posted</div></div>
+                </div>
+              </div>
+                <div className="filter-row" style={{marginTop:10,marginBottom:0}}>
+                  <select value={pmFilterClient} onChange={e=>setPmFilterClient(e.target.value)}>
+                    <option value="">All clients</option>
+                    {clientNames.map(n=><option key={n}>{n}</option>)}
+                  </select>
+                  <select value={pmFilterStatus} onChange={e=>setPmFilterStatus(e.target.value)}>
+                    <option value="">All posts</option>
+                    <option value="overdue">Overdue</option>
+                    <option value="today">Due today</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="done">All posted</option>
+                  </select>
+                  <input type="date" value={globalDateFrom} onChange={e=>setGlobalDateFrom(e.target.value)}
+                    style={{padding:"5px 8px",fontSize:12,border:"1px solid #ddd",borderRadius:7,background:"#fff",color:"#1a1a1a"}} title="From date"/>
+                  <span style={{fontSize:12,color:"#888",alignSelf:"center"}}>→</span>
+                  <input type="date" value={globalDateTo} onChange={e=>setGlobalDateTo(e.target.value)}
+                    style={{padding:"5px 8px",fontSize:12,border:"1px solid #ddd",borderRadius:7,background:"#fff",color:"#1a1a1a"}} title="To date"/>
+                  {(globalDateFrom||globalDateTo) && <button className="btn btn-sm" onClick={()=>{setGlobalDateFrom("");setGlobalDateTo("");}}>Clear</button>}
+                </div>
+              </div>
+            </div>
           <div className="content">
-            {ov>0 && <div className="alert alert-red"><i className="ti ti-alert-circle"></i><span><strong>{ov} post{ov>1?"s are":" is"} overdue</strong> — scheduled time has passed and not fully posted.</span></div>}
-            {td>0 && <div className="alert alert-amber"><i className="ti ti-clock"></i><span><strong>{td} post{td>1?"s":""} due today</strong> — keep an eye on these.</span></div>}
-            {!ov&&!td && <div className="alert alert-green"><i className="ti ti-circle-check"></i><span>All clear — no overdue or pending posts for today.</span></div>}
-            <div className="stats-grid">
-              <div className="stat-card"><div className="stat-num" style={{color:"#DC2626"}}>{ov}</div><div className="stat-label">Overdue</div></div>
-              <div className="stat-card"><div className="stat-num" style={{color:"#D97706"}}>{td}</div><div className="stat-label">Due today</div></div>
-              <div className="stat-card"><div className="stat-num">{up}</div><div className="stat-label">Upcoming</div></div>
-              <div className="stat-card"><div className="stat-num" style={{color:"#16A34A"}}>{dn}</div><div className="stat-label">Posted</div></div>
-            </div>
-            <div className="filter-row">
-              <select value={pmFilterClient} onChange={e=>setPmFilterClient(e.target.value)}>
-                <option value="">All clients</option>
-                {clientNames.map(n=><option key={n}>{n}</option>)}
-              </select>
-              <select value={pmFilterStatus} onChange={e=>setPmFilterStatus(e.target.value)}>
-                <option value="">All posts</option>
-                <option value="overdue">Overdue</option>
-                <option value="today">Due today</option>
-                <option value="upcoming">Upcoming</option>
-                <option value="done">All posted</option>
-              </select>
-              <input type="date" value={globalDateFrom} onChange={e=>setGlobalDateFrom(e.target.value)}
-                style={{padding:"5px 8px",fontSize:12,border:"1px solid #ddd",borderRadius:7,background:"#fff",color:"#1a1a1a"}} title="From date"/>
-              <span style={{fontSize:12,color:"#888",alignSelf:"center"}}>→</span>
-              <input type="date" value={globalDateTo} onChange={e=>setGlobalDateTo(e.target.value)}
-                style={{padding:"5px 8px",fontSize:12,border:"1px solid #ddd",borderRadius:7,background:"#fff",color:"#1a1a1a"}} title="To date"/>
-              {(globalDateFrom||globalDateTo) && <button className="btn btn-sm" onClick={()=>{setGlobalDateFrom("");setGlobalDateTo("");}}>Clear</button>}
-            </div>
             {loading ? <div className="loading"><span className="spinner"></span>Loading posts...</div> :
               groups.some(g=>g.items.length) ? groups.map(g=> g.items.length ? (
                 <div key={g.key} className="group-wrap">
@@ -477,6 +483,7 @@ export default function Home() {
               ) : null) :
               <div className="empty"><i className="ti ti-calendar-off"></i>No posts match this filter.</div>
             }
+          </div>
           </div>
         )}
         {activeTab==="new" && (
@@ -816,23 +823,24 @@ export default function Home() {
             <div className="stat-card"><div className="stat-num" style={{color:"#D97706"}}>{rem}</div><div className="stat-label">Pending</div></div>
             </div>
           </div>
-          <div className="content">
-          <div className="filter-row">
-            <select value={postFilterClient} onChange={e=>setPostFilterClient(e.target.value)}>
-              <option value="">All clients</option>
-              {clientNames.map(n=><option key={n}>{n}</option>)}
-            </select>
-            <select value={postFilterShow} onChange={e=>setPostFilterShow(e.target.value)}>
-              <option value="pending">Pending only</option>
-              <option value="all">All posts</option>
-            </select>
+            <div className="filter-row" style={{marginTop:10,marginBottom:0}}>
+              <select value={postFilterClient} onChange={e=>setPostFilterClient(e.target.value)}>
+                <option value="">All clients</option>
+                {clientNames.map(n=><option key={n}>{n}</option>)}
+              </select>
+              <select value={postFilterShow} onChange={e=>setPostFilterShow(e.target.value)}>
+                <option value="pending">Pending only</option>
+                <option value="all">All posts</option>
+              </select>
             <input type="date" value={globalDateFrom} onChange={e=>setGlobalDateFrom(e.target.value)}
               style={{padding:"5px 8px",fontSize:12,border:"1px solid #ddd",borderRadius:7,background:"#fff",color:"#1a1a1a"}} title="From date"/>
             <span style={{fontSize:12,color:"#888",alignSelf:"center"}}>→</span>
             <input type="date" value={globalDateTo} onChange={e=>setGlobalDateTo(e.target.value)}
               style={{padding:"5px 8px",fontSize:12,border:"1px solid #ddd",borderRadius:7,background:"#fff",color:"#1a1a1a"}} title="To date"/>
-            {(globalDateFrom||globalDateTo) && <button className="btn btn-sm" onClick={()=>{setGlobalDateFrom("");setGlobalDateTo("");}}>Clear</button>}
+              {(globalDateFrom||globalDateTo) && <button className="btn btn-sm" onClick={()=>{setGlobalDateFrom("");setGlobalDateTo("");}}>Clear</button>}
+            </div>
           </div>
+          <div className="content">
           {loading ? <div className="loading"><span className="spinner"></span>Loading posts...</div> :
             filtered.length ? filtered.map(p=><PostingCard key={p.id} p={p} onMark={markPlatform}/>) :
             <div className="empty"><i className="ti ti-circle-check"></i>All caught up! Nothing pending.</div>
@@ -1186,7 +1194,7 @@ function BgBotanical() {
   return (
     <div className="bg-botanical">
       <svg width="100%" height="100%" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-        <text x="780" y="430" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#7DC242" opacity="0.15" transform="rotate(-12 780 500)">meraki</text>
+        <text x="780" y="430" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#7DC242" opacity="0.13" transform="rotate(-12 780 500)">meraki</text>
         <text x="820" y="590" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#29ABE2" opacity="0.15" transform="rotate(-12 820 560)">ads</text>
         <path d="M -10 120 Q 20 70 70 50 Q 60 90 -10 120 Z" fill="#C5E89A" opacity="0.5"/>
         <path d="M -10 120 Q 40 80 70 50" stroke="#7DC242" strokeWidth="1" fill="none" opacity="0.4"/>
@@ -1308,7 +1316,7 @@ function QuoteCard() {
     `</svg>`
   ].join("");
   return (
-    <div style={{width:"100%",maxWidth:"360px",background:"#fff",borderRadius:"18px",overflow:"hidden",border:"0.5px solid #e0e0e0"}}>
+    <div style={{width:"100%",maxWidth:"360px",background:"rgba(255,255,255,0.82)",borderRadius:"18px",overflow:"hidden",border:"0.5px solid #e0e0e0"}}>
       <div style={{height:"3px",background:"#7DC242"}}></div>
       <div dangerouslySetInnerHTML={{__html: svgContent}}/>
       <div style={{height:"3px",background:"#29ABE2"}}></div>
@@ -1344,7 +1352,7 @@ const globalCSS = `
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F2F5EE;color:#1a1a1a;font-size:15px;min-height:100vh}.bg-botanical{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}.bg-content{position:relative;z-index:1}
 .login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem;gap:14px;background:transparent}
-.login-card{background:#fff;border-radius:18px;padding:1.75rem;width:100%;max-width:360px;border:0.5px solid #e0e0e0}
+.login-card{background:rgba(255,255,255,0.82);border-radius:18px;padding:1.75rem;width:100%;max-width:360px;border:0.5px solid #e0e0e0;backdrop-filter:blur(0px)}
 .login-logo{text-align:center;margin-bottom:4px}
 .logo-text{font-family:'Dancing Script',cursive;font-size:28px;font-weight:600;line-height:1;display:inline-block}
 .logo-text .lm{color:#7DC242}.logo-text .la{color:#29ABE2}
