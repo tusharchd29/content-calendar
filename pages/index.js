@@ -359,7 +359,9 @@ export default function Home() {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400&display=swap"/>
       </Head>
       <style>{globalCSS}</style>
-      <div className="login-wrap">
+      <>
+      <BgBotanical/>
+      <div className="login-wrap" style={{position:"relative",zIndex:1}}>
         <QuoteCard/>
         <div className="login-card">
           <div className="login-logo"><span className="logo-text"><span className="lm">meraki</span><span className="la">ads</span></span></div>
@@ -386,6 +388,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      </>
       <Toast msg={toastMsg} show={toastShow}/>
     </>
   );
@@ -415,6 +418,7 @@ export default function Home() {
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400&display=swap"/></Head>
         <style>{globalCSS}</style>
+        <BgBotanical/>
         <div className="topbar">
           <TopbarBotanical/>
           <span className="topbar-logo"><span className="lm">meraki</span><span className="la">ads</span></span>
@@ -819,6 +823,7 @@ export default function Home() {
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400&display=swap"/></Head>
         <style>{globalCSS}</style>
+        <BgBotanical/>
         <div className="topbar">
           <TopbarBotanical/>
           <span className="topbar-logo"><span className="lm">meraki</span><span className="la">ads</span></span>
@@ -1140,6 +1145,88 @@ function getDayOfYear() {
   return Math.floor((now - start) / 86400000) - 1;
 }
 
+
+function BgBotanical() {
+  return (
+    <div className="bg-botanical">
+      <svg width="100%" height="100%" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        {/* Faded merakiads watermark center */}
+        <text x="720" y="480" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#7DC242" opacity="0.04" transform="rotate(-15 720 480)">meraki</text>
+        <text x="720" y="630" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#29ABE2" opacity="0.04" transform="rotate(-15 720 630)">ads</text>
+        {/* Top left cluster */}
+        <path d="M -10 120 Q 20 70 70 50 Q 60 90 -10 120 Z" fill="#C5E89A" opacity="0.5"/>
+        <path d="M -10 120 Q 40 80 70 50" stroke="#7DC242" strokeWidth="1" fill="none" opacity="0.4"/>
+        <path d="M 20 150 Q 55 90 100 75 Q 85 115 20 150 Z" fill="#97C459" opacity="0.38"/>
+        <path d="M -5 80 Q 30 40 75 30 Q 60 65 -5 80 Z" fill="#C0DD97" opacity="0.35"/>
+        <path d="M 35 170 Q 45 110 55 45" stroke="#639922" strokeWidth="1.2" fill="none" opacity="0.35" strokeLinecap="round"/>
+        <circle cx="55" cy="38" r="5" fill="#29ABE2" opacity="0.38"/>
+        <circle cx="55" cy="38" r="3" fill="#7DC242" opacity="0.5"/>
+        <ellipse cx="48" cy="31" rx="5" ry="3" fill="#A8DCF0" opacity="0.4" transform="rotate(-30 48 31)"/>
+        <ellipse cx="62" cy="31" rx="5" ry="3" fill="#A8DCF0" opacity="0.4" transform="rotate(30 62 31)"/>
+        {/* Top right cluster */}
+        <path d="M 1450 80 Q 1410 40 1370 30 Q 1375 65 1450 80 Z" fill="#C5E89A" opacity="0.5"/>
+        <path d="M 1450 80 Q 1400 48 1370 30" stroke="#7DC242" strokeWidth="1" fill="none" opacity="0.4"/>
+        <path d="M 1430 120 Q 1385 75 1345 65 Q 1355 100 1430 120 Z" fill="#97C459" opacity="0.38"/>
+        <path d="M 1455 50 Q 1415 20 1360 15 Q 1370 48 1455 50 Z" fill="#C0DD97" opacity="0.35"/>
+        <path d="M 1395 145 Q 1388 90 1378 28" stroke="#639922" strokeWidth="1.2" fill="none" opacity="0.35" strokeLinecap="round"/>
+        <circle cx="1378" cy="20" r="5" fill="#FAC775" opacity="0.45"/>
+        <circle cx="1378" cy="20" r="3" fill="#EF9F27" opacity="0.5"/>
+        <ellipse cx="1371" cy="13" rx="5" ry="3" fill="#FAC775" opacity="0.4" transform="rotate(-30 1371 13)"/>
+        <ellipse cx="1385" cy="13" rx="5" ry="3" fill="#FAC775" opacity="0.4" transform="rotate(30 1385 13)"/>
+        {/* Bottom left cluster */}
+        <path d="M -10 820 Q 30 770 80 755 Q 70 795 -10 820 Z" fill="#C5E89A" opacity="0.45"/>
+        <path d="M -10 820 Q 45 778 80 755" stroke="#7DC242" strokeWidth="1" fill="none" opacity="0.38"/>
+        <path d="M 25 850 Q 65 795 110 785 Q 95 825 25 850 Z" fill="#97C459" opacity="0.35"/>
+        <path d="M -5 780 Q 35 740 85 730 Q 70 765 -5 780 Z" fill="#C0DD97" opacity="0.32"/>
+        <path d="M 42 870 Q 50 815 58 748" stroke="#639922" strokeWidth="1.2" fill="none" opacity="0.32" strokeLinecap="round"/>
+        <circle cx="58" cy="740" r="5" fill="#29ABE2" opacity="0.35"/>
+        <circle cx="58" cy="740" r="3" fill="#7DC242" opacity="0.48"/>
+        {/* Bottom right cluster */}
+        <path d="M 1450 830 Q 1405 785 1365 775 Q 1372 808 1450 830 Z" fill="#C5E89A" opacity="0.45"/>
+        <path d="M 1450 830 Q 1400 790 1365 775" stroke="#7DC242" strokeWidth="1" fill="none" opacity="0.38"/>
+        <path d="M 1435 870 Q 1388 820 1350 812 Q 1360 845 1435 870 Z" fill="#97C459" opacity="0.35"/>
+        <path d="M 1388 888 Q 1382 835 1372 768" stroke="#639922" strokeWidth="1.2" fill="none" opacity="0.32" strokeLinecap="round"/>
+        <circle cx="1372" cy="760" r="5" fill="#FAC775" opacity="0.42"/>
+        <circle cx="1372" cy="760" r="3" fill="#EF9F27" opacity="0.48"/>
+        {/* Mid left sprig */}
+        <path d="M -5 430 Q 28 390 65 378 Q 55 412 -5 430 Z" fill="#C0DD97" opacity="0.35"/>
+        <path d="M -5 430 Q 35 398 65 378" stroke="#7DC242" strokeWidth="0.8" fill="none" opacity="0.3"/>
+        <path d="M 15 460 Q 50 418 88 408 Q 75 442 15 460 Z" fill="#97C459" opacity="0.28"/>
+        <circle cx="72" cy="370" r="4" fill="#29ABE2" opacity="0.32"/>
+        <circle cx="72" cy="370" r="2.5" fill="#7DC242" opacity="0.42"/>
+        {/* Mid right sprig */}
+        <path d="M 1445 400 Q 1412 362 1375 352 Q 1382 385 1445 400 Z" fill="#C0DD97" opacity="0.35"/>
+        <path d="M 1445 400 Q 1400 368 1375 352" stroke="#7DC242" strokeWidth="0.8" fill="none" opacity="0.3"/>
+        <path d="M 1425 440 Q 1390 400 1352 392 Q 1362 425 1425 440 Z" fill="#97C459" opacity="0.28"/>
+        <circle cx="1368" cy="344" r="4" fill="#FAC775" opacity="0.38"/>
+        <circle cx="1368" cy="344" r="2.5" fill="#EF9F27" opacity="0.45"/>
+        {/* Scattered dots */}
+        <circle cx="200" cy="150" r="2.5" fill="#7DC242" opacity="0.2"/>
+        <circle cx="350" cy="80" r="2" fill="#29ABE2" opacity="0.18"/>
+        <circle cx="520" cy="200" r="3" fill="#97C459" opacity="0.18"/>
+        <circle cx="900" cy="120" r="2.5" fill="#7DC242" opacity="0.16"/>
+        <circle cx="1100" cy="180" r="2" fill="#29ABE2" opacity="0.18"/>
+        <circle cx="1250" cy="90" r="3" fill="#FAC775" opacity="0.2"/>
+        <circle cx="180" cy="700" r="2.5" fill="#29ABE2" opacity="0.18"/>
+        <circle cx="400" cy="800" r="2" fill="#7DC242" opacity="0.16"/>
+        <circle cx="700" cy="850" r="3" fill="#97C459" opacity="0.18"/>
+        <circle cx="1050" cy="780" r="2.5" fill="#FAC775" opacity="0.2"/>
+        <circle cx="1300" cy="720" r="2" fill="#29ABE2" opacity="0.18"/>
+        {/* Small sprigs scattered */}
+        <path d="M 300 250 Q 290 225 305 210 Q 315 228 300 250 Z" fill="#C5E89A" opacity="0.3"/>
+        <path d="M 315 248 Q 328 223 312 210 Q 304 228 315 248 Z" fill="#C0DD97" opacity="0.28"/>
+        <path d="M 307 255 Q 308 232 308 205" stroke="#7DC242" strokeWidth="0.7" fill="none" opacity="0.28" strokeLinecap="round"/>
+        <path d="M 1140 300 Q 1130 275 1145 260 Q 1155 278 1140 300 Z" fill="#C5E89A" opacity="0.3"/>
+        <path d="M 1155 298 Q 1168 273 1152 260 Q 1144 278 1155 298 Z" fill="#C0DD97" opacity="0.28"/>
+        <path d="M 1147 305 Q 1148 282 1148 255" stroke="#7DC242" strokeWidth="0.7" fill="none" opacity="0.28" strokeLinecap="round"/>
+        <path d="M 650 750 Q 640 725 655 710 Q 665 728 650 750 Z" fill="#C5E89A" opacity="0.28"/>
+        <path d="M 665 748 Q 678 723 662 710 Q 654 728 665 748 Z" fill="#C0DD97" opacity="0.25"/>
+        <path d="M 657 755 Q 658 732 658 705" stroke="#7DC242" strokeWidth="0.7" fill="none" opacity="0.25" strokeLinecap="round"/>
+      </svg>
+    </div>
+  );
+}
+
 function QuoteCard() {
   const dayIdx = Math.min(Math.max(getDayOfYear(), 0), QUOTES_365.length - 1);
   const quote = QUOTES_365[dayIdx] || QUOTES_365[0];
@@ -1228,7 +1315,7 @@ function TopbarBotanical() {
 
 const globalCSS = `
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F7F9F4;color:#1a1a1a;font-size:15px}.page-wrap{padding-top:54px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F7F9F4;color:#1a1a1a;font-size:15px;min-height:100vh}.page-wrap{padding-top:54px}.bg-botanical{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}.bg-content{position:relative;z-index:1}
 .login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem;gap:14px;background:#F7F9F4}
 .login-card{background:#fff;border-radius:18px;padding:1.75rem;width:100%;max-width:360px;border:0.5px solid #e0e0e0}
 .login-logo{text-align:center;margin-bottom:4px}
