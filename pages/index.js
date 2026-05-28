@@ -838,6 +838,7 @@ export default function Home() {
             <div className="empty"><i className="ti ti-circle-check"></i>All caught up! Nothing pending.</div>
           }
         </div>
+        </div>
         <Toast msg={toastMsg} show={toastShow}/>
       </>
     );
