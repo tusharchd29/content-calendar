@@ -357,6 +357,7 @@ export default function Home() {
         <title>Postings</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400&display=swap"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400&display=swap"/>
       </Head>
       <style>{globalCSS}</style>
       <div className="login-wrap">
@@ -413,6 +414,7 @@ export default function Home() {
       <>
         <Head><title>PM Dashboard – Postings</title>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400&display=swap"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400&display=swap"/></Head>
         <style>{globalCSS}</style>
 
@@ -531,7 +533,7 @@ export default function Home() {
 
         {/* CLIENTS */}
         {activeTab==="clients" && (
-          <div className="content">
+          <div className="content" style={{position:"relative"}}><BodyBotanical/>
             {clientSuccess && <div className="success-banner" style={{display:"block"}}>{clientSuccess}</div>}
             <div className="section-title">Add new client</div>
             <div className="form-card" style={{marginBottom:"1.5rem"}}>
@@ -598,7 +600,7 @@ export default function Home() {
 
         {/* SOW TAB */}
         {activeTab==="sow" && (
-          <div className="content">
+          <div className="content" style={{position:"relative"}}><BodyBotanical/>
             {/* Header row */}
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"1rem",flexWrap:"wrap",gap:8}}>
               <div style={{display:"flex",alignItems:"center",gap:8}}>
@@ -818,6 +820,7 @@ export default function Home() {
       <>
         <Head><title>Posting Team – Postings</title>
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400&display=swap"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400&display=swap"/></Head>
         <style>{globalCSS}</style>
         <div className="topbar">
@@ -1269,7 +1272,152 @@ function QuoteCard() {
     <div style={{width:"100%",maxWidth:"360px",background:"#fff",borderRadius:"18px",overflow:"hidden",border:"0.5px solid #e0e0e0"}}>
       <div style={{height:"3px",background:"#7DC242"}}></div>
       <div dangerouslySetInnerHTML={{__html: svgContent}}/>
+      <div style={{height:"3px",background:"#29ABE2"}}></d
+// ── BOTANICAL SVG COMPONENTS ────────────────────────────────
+function TopbarBotanical() {
+  return (
+    <svg className="topbar-botanical" viewBox="0 0 800 54" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="0" x2="800" y2="0" stroke="#7DC242" strokeWidth="2.5" opacity="0.7"/>
+      <path d="M -2 54 Q 10 36 32 28 Q 30 46 -2 54 Z" fill="#C5E89A" opacity="0.5"/>
+      <path d="M -2 54 Q 22 38 32 28" stroke="#7DC242" strokeWidth="0.8" fill="none" opacity="0.45"/>
+      <path d="M 14 54 Q 24 36 44 28 Q 38 46 14 54 Z" fill="#97C459" opacity="0.38"/>
+      <path d="M -4 46 Q 16 30 40 24 Q 34 42 -4 46 Z" fill="#C0DD97" opacity="0.3"/>
+      <path d="M 28 56 Q 28 36 30 22" stroke="#639922" strokeWidth="1" fill="none" opacity="0.38" strokeLinecap="round"/>
+      <circle cx="30" cy="18" r="4" fill="#29ABE2" opacity="0.4"/>
+      <circle cx="30" cy="18" r="2.5" fill="#7DC242" opacity="0.55"/>
+      <ellipse cx="24" cy="13" rx="4" ry="2.5" fill="#A8DCF0" opacity="0.45" transform="rotate(-30 24 13)"/>
+      <ellipse cx="36" cy="13" rx="4" ry="2.5" fill="#A8DCF0" opacity="0.45" transform="rotate(30 36 13)"/>
+      <path d="M 802 0 Q 790 20 766 28 Q 764 10 802 0 Z" fill="#C5E89A" opacity="0.5"/>
+      <path d="M 802 0 Q 778 22 766 28" stroke="#7DC242" strokeWidth="0.8" fill="none" opacity="0.45"/>
+      <path d="M 786 0 Q 764 18 754 28 Q 756 10 786 0 Z" fill="#97C459" opacity="0.38"/>
+      <path d="M 804 8 Q 782 26 762 30 Q 766 14 804 8 Z" fill="#C0DD97" opacity="0.3"/>
+      <path d="M 770 -2 Q 770 20 768 34" stroke="#639922" strokeWidth="1" fill="none" opacity="0.38" strokeLinecap="round"/>
+      <circle cx="768" cy="38" r="4" fill="#FAC775" opacity="0.5"/>
+      <circle cx="768" cy="38" r="2.5" fill="#EF9F27" opacity="0.55"/>
+      <ellipse cx="762" cy="33" rx="4" ry="2.5" fill="#FAC775" opacity="0.45" transform="rotate(-30 762 33)"/>
+      <ellipse cx="774" cy="33" rx="4" ry="2.5" fill="#FAC775" opacity="0.45" transform="rotate(30 774 33)"/>
+    </svg>
+  );
+}
+
+function BodyBotanical() {
+  return (
+    <>
+      <svg style={{position:"absolute",top:0,right:0,width:"200px",height:"100%",pointerEvents:"none",zIndex:0}} viewBox="0 0 200 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMid meet">
+        <path d="M 160 0 Q 178 38 152 72 Q 134 38 160 0 Z" fill="#C5E89A" opacity="0.32"/>
+        <path d="M 160 0 Q 140 38 152 72" stroke="#7DC242" strokeWidth="0.8" fill="none" opacity="0.28"/>
+        <path d="M 182 8 Q 196 50 168 82 Q 148 50 182 8 Z" fill="#97C459" opacity="0.22"/>
+        <path d="M 142 16 Q 160 58 156 98 Q 136 58 142 16 Z" fill="#C0DD97" opacity="0.26"/>
+        <path d="M 156 -2 Q 155 46 153 100" stroke="#639922" strokeWidth="1.2" fill="none" opacity="0.3" strokeLinecap="round"/>
+        <circle cx="153" cy="106" r="5.5" fill="#FAC775" opacity="0.48"/>
+        <circle cx="153" cy="106" r="3" fill="#EF9F27" opacity="0.52"/>
+        <ellipse cx="146" cy="100" rx="5.5" ry="3" fill="#FAC775" opacity="0.42" transform="rotate(-35 146 100)"/>
+        <ellipse cx="160" cy="100" rx="5.5" ry="3" fill="#FAC775" opacity="0.42" transform="rotate(35 160 100)"/>
+        <path d="M 175 210 Q 194 244 168 274 Q 150 244 175 210 Z" fill="#C5E89A" opacity="0.26"/>
+        <path d="M 175 210 Q 155 244 168 274" stroke="#7DC242" strokeWidth="0.8" fill="none" opacity="0.24"/>
+        <path d="M 190 220 Q 205 258 182 284 Q 162 258 190 220 Z" fill="#97C459" opacity="0.18"/>
+        <path d="M 178 200 Q 176 244 172 282" stroke="#639922" strokeWidth="1" fill="none" opacity="0.26" strokeLinecap="round"/>
+        <circle cx="172" cy="288" r="5" fill="#29ABE2" opacity="0.38"/>
+        <circle cx="172" cy="288" r="3" fill="#7DC242" opacity="0.48"/>
+        <ellipse cx="166" cy="282" rx="5" ry="3" fill="#A8DCF0" opacity="0.36" transform="rotate(-30 166 282)"/>
+        <ellipse cx="178" cy="282" rx="5" ry="3" fill="#A8DCF0" opacity="0.36" transform="rotate(30 178 282)"/>
+        <path d="M 165 400 Q 186 432 160 462 Q 142 432 165 400 Z" fill="#C5E89A" opacity="0.28"/>
+        <path d="M 182 410 Q 198 444 175 470 Q 156 444 182 410 Z" fill="#97C459" opacity="0.2"/>
+        <path d="M 148 416 Q 166 450 163 482 Q 144 450 148 416 Z" fill="#C0DD97" opacity="0.24"/>
+        <path d="M 164 390 Q 162 430 160 472" stroke="#639922" strokeWidth="1" fill="none" opacity="0.26" strokeLinecap="round"/>
+        <circle cx="160" cy="478" r="5" fill="#FAC775" opacity="0.44"/>
+        <circle cx="160" cy="478" r="3" fill="#EF9F27" opacity="0.5"/>
+        <circle cx="120" cy="155" r="2" fill="#7DC242" opacity="0.18"/>
+        <circle cx="188" cy="175" r="1.5" fill="#29ABE2" opacity="0.16"/>
+        <circle cx="135" cy="330" r="2" fill="#97C459" opacity="0.18"/>
+        <circle cx="192" cy="360" r="1.5" fill="#FAC775" opacity="0.2"/>
+        <circle cx="112" cy="460" r="2" fill="#29ABE2" opacity="0.16"/>
+      </svg>
+      <svg style={{position:"absolute",bottom:0,left:0,width:"80px",height:"160px",pointerEvents:"none",zIndex:0}} viewBox="0 0 80 160" xmlns="http://www.w3.org/2000/svg">
+        <path d="M -2 160 Q 8 134 28 122 Q 26 142 -2 160 Z" fill="#C5E89A" opacity="0.3"/>
+        <path d="M -2 150 Q 14 128 34 120 Q 28 140 -2 150 Z" fill="#97C459" opacity="0.22"/>
+        <path d="M 12 160 Q 22 134 38 124 Q 32 144 12 160 Z" fill="#C0DD97" opacity="0.25"/>
+        <path d="M 20 162 Q 22 138 24 118" stroke="#639922" strokeWidth="1" fill="none" opacity="0.28" strokeLinecap="round"/>
+        <circle cx="24" cy="114" r="4" fill="#29ABE2" opacity="0.34"/>
+        <circle cx="24" cy="114" r="2.5" fill="#7DC242" opacity="0.44"/>
+      </svg>
+    </>
+  );
+}
+
+// ── QUOTE CARD ───────────────────────────────────────────────
+
+function getDayOfYear() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  return Math.floor((now - start) / 86400000) - 1;
+}
+
+function QuoteCard() {
+  const dayIdx = Math.min(getDayOfYear(), QUOTES_365.length - 1);
+  const quote = QUOTES_365[dayIdx] || QUOTES_365[0];
+  const now = new Date();
+  const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const dateStr = days[now.getDay()] + ", " + now.getDate() + " " + months[now.getMonth()] + " " + now.getFullYear();
+
+  const words = quote.split(" ");
+  const lines = [];
+  let line = "";
+  for (const w of words) {
+    const t = line ? line + " " + w : w;
+    if (t.length > 36 && line) { lines.push(line); line = w; } else line = t;
+  }
+  if (line) lines.push(line);
+  const fs = lines.length > 3 ? 17 : lines.length > 2 ? 19 : 21;
+  const lh = fs + 10;
+  const midY = 96;
+  const startY = midY - ((lines.length - 1) * lh) / 2;
+
+  const textEls = lines.map((l, i) =>
+    `<text x="200" y="${startY + i * lh}" text-anchor="middle" font-family="Dancing Script,cursive" font-size="${fs}" fill="#2C2C2A" font-weight="600">${l.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</text>`
+  ).join("");
+
+  const svgContent = `<svg width="100%" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="display:block">
+    <rect width="400" height="200" fill="#FDFCF8"/>
+    <path d="M -2 200 Q 8 164 30 144 Q 44 168 -2 200 Z" fill="#C5E89A" opacity="0.6"/>
+    <path d="M -2 200 Q 22 166 30 144" stroke="#7DC242" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <path d="M 18 200 Q 28 166 48 154 Q 40 176 18 200 Z" fill="#97C459" opacity="0.4"/>
+    <path d="M -4 188 Q 14 158 24 132 Q 34 156 -4 188 Z" fill="#C0DD97" opacity="0.3"/>
+    <path d="M 28 202 Q 28 168 28 138" stroke="#639922" stroke-width="1" fill="none" opacity="0.38" stroke-linecap="round"/>
+    <circle cx="28" cy="134" r="4.5" fill="#29ABE2" opacity="0.4"/>
+    <circle cx="28" cy="134" r="2.5" fill="#7DC242" opacity="0.55"/>
+    <ellipse cx="22" cy="128" rx="4.5" ry="2.5" fill="#A8DCF0" opacity="0.45" transform="rotate(-30 22 128)"/>
+    <ellipse cx="34" cy="128" rx="4.5" ry="2.5" fill="#A8DCF0" opacity="0.45" transform="rotate(30 34 128)"/>
+    <path d="M 402 0 Q 390 34 366 46 Q 362 22 402 0 Z" fill="#C5E89A" opacity="0.6"/>
+    <path d="M 402 0 Q 376 26 366 46" stroke="#7DC242" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <path d="M 402 16 Q 374 38 356 48 Q 360 24 402 16 Z" fill="#97C459" opacity="0.38"/>
+    <path d="M 404 8 Q 386 40 376 68 Q 366 44 404 8 Z" fill="#C0DD97" opacity="0.28"/>
+    <path d="M 374 -2 Q 372 28 370 56" stroke="#639922" stroke-width="1" fill="none" opacity="0.38" stroke-linecap="round"/>
+    <circle cx="370" cy="60" r="4.5" fill="#FAC775" opacity="0.5"/>
+    <circle cx="370" cy="60" r="2.5" fill="#EF9F27" opacity="0.55"/>
+    <ellipse cx="364" cy="54" rx="4.5" ry="2.5" fill="#FAC775" opacity="0.45" transform="rotate(-30 364 54)"/>
+    <ellipse cx="376" cy="54" rx="4.5" ry="2.5" fill="#FAC775" opacity="0.45" transform="rotate(30 376 54)"/>
+    <text x="52" y="${midY+32}" font-family="Cormorant Garamond,Georgia,serif" font-size="82" fill="#7DC242" opacity="0.1" font-style="italic">"</text>
+    <text x="298" y="${midY+54}" font-family="Cormorant Garamond,Georgia,serif" font-size="82" fill="#29ABE2" opacity="0.08" font-style="italic">"</text>
+    ${textEls}
+    <line x1="${200-52}" y1="${midY+44}" x2="${200+52}" y2="${midY+44}" stroke="#C0DD97" stroke-width="0.8"/>
+    <circle cx="200" cy="${midY+44}" r="2" fill="#7DC242" opacity="0.6"/>
+    <text x="200" y="${midY+58}" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="11" fill="#aaa" font-style="italic" letter-spacing="1.5">Meraki Ads</text>
+    <rect x="148" y="${midY+66}" width="104" height="18" rx="9" fill="#EAF3DE"/>
+    <text x="200" y="${midY+78}" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" fill="#3B6D11" letter-spacing="0.3">${dateStr}</text>
+  </svg>`;
+
+  return (
+    <div style={{width:"100%",maxWidth:"360px",background:"#fff",borderRadius:"18px",overflow:"hidden",border:"0.5px solid #e0e0e0"}}>
+      <div style={{height:"3px",background:"#7DC242"}}></div>
+      <div dangerouslySetInnerHTML={{__html: svgContent}}/>
       <div style={{height:"3px",background:"#29ABE2"}}></div>
+    </div>
+  );
+}
+
+iv>
     </div>
   );
 }
