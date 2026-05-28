@@ -258,23 +258,33 @@ export default function Home() {
     const postedBy = name || "Unknown";
     let screenshot = null;
     if(screenshotFile) {
-      const data = await new Promise((resolve) => {
+      const data = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = e => {
           const img = new Image();
           img.onload = () => {
-            const MAX_W = 600;
-            const scale = img.width > MAX_W ? MAX_W / img.width : 1;
-            const canvas = document.createElement("canvas");
-            canvas.width = Math.round(img.width * scale);
-            canvas.height = Math.round(img.height * scale);
-            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-            resolve(canvas.toDataURL("image/jpeg", 0.6).split(",")[1]);
+            // Try progressively harder compression until under 36000 chars (~50k limit with margin)
+            const attempts = [
+              { maxW: 480, quality: 0.5 },
+              { maxW: 360, quality: 0.4 },
+              { maxW: 280, quality: 0.3 },
+            ];
+            for (const { maxW, quality } of attempts) {
+              const scale = img.width > maxW ? maxW / img.width : 1;
+              const canvas = document.createElement("canvas");
+              canvas.width = Math.round(img.width * scale);
+              canvas.height = Math.round(img.height * scale);
+              canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+              const b64 = canvas.toDataURL("image/jpeg", quality).split(",")[1];
+              if (b64.length < 36000) { resolve(b64); return; }
+            }
+            reject(new Error("Image too large to compress under Sheets limit. Please crop or resize it first."));
           };
           img.src = e.target.result;
         };
         reader.readAsDataURL(screenshotFile);
-      });
+      }).catch(err => { toast("Error: " + err.message); return null; });
+      if (!data) return;
       screenshot = { data, name: screenshotFile.name.replace(/\.[^.]+$/, ".jpg"), mimeType: "image/jpeg", clientName };
     }
     try {
