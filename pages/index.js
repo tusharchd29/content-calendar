@@ -808,7 +808,7 @@ export default function Home() {
             <button className="btn btn-sm" onClick={logout}><i className="ti ti-logout"></i> Sign out</button>
           </div>
         </div>
-        <div className="content">
+        <div className="content" style={{paddingTop:108}}>
           <div className="stats-grid">
             <div className="stat-card"><div className="stat-num">{total}</div><div className="stat-label">Total</div></div>
             <div className="stat-card"><div className="stat-num" style={{color:"#16A34A"}}>{dn}</div><div className="stat-label">Posted</div></div>
@@ -1182,8 +1182,8 @@ function BgBotanical() {
   return (
     <div className="bg-botanical">
       <svg width="100%" height="100%" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-        <text x="720" y="480" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#7DC242" opacity="0.12" transform="rotate(-15 720 480)">meraki</text>
-        <text x="720" y="630" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#29ABE2" opacity="0.12" transform="rotate(-15 720 630)">ads</text>
+        <text x="720" y="430" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#7DC242" opacity="0.12" transform="rotate(-15 720 500)">meraki</text>
+        <text x="720" y="590" textAnchor="middle" fontFamily="Dancing Script,cursive" fontSize="160" fontWeight="600" fill="#29ABE2" opacity="0.12" transform="rotate(-15 720 500)">ads</text>
         <path d="M -10 120 Q 20 70 70 50 Q 60 90 -10 120 Z" fill="#C5E89A" opacity="0.5"/>
         <path d="M -10 120 Q 40 80 70 50" stroke="#7DC242" strokeWidth="1" fill="none" opacity="0.4"/>
         <path d="M 20 150 Q 55 90 100 75 Q 85 115 20 150 Z" fill="#97C459" opacity="0.38"/>
@@ -1338,7 +1338,7 @@ function TopbarBotanical() {
 
 const globalCSS = `
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F2F5EE;color:#1a1a1a;font-size:15px;min-height:100vh}.page-wrap{padding-top:54px}.bg-botanical{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}.bg-content{position:relative;z-index:1}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F2F5EE;color:#1a1a1a;font-size:15px;min-height:100vh}.bg-botanical{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}.bg-content{position:relative;z-index:1}
 .login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem;gap:14px;background:transparent}
 .login-card{background:#fff;border-radius:18px;padding:1.75rem;width:100%;max-width:360px;border:0.5px solid #e0e0e0}
 .login-logo{text-align:center;margin-bottom:4px}
@@ -1355,10 +1355,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .topbar-logo .lm{color:#7DC242}.topbar-logo .la{color:#29ABE2}
 .topbar-botanical{position:absolute;top:0;left:0;width:100%;height:54px;pointer-events:none;z-index:1}
 .topbar-right{display:flex;gap:8px;align-items:center;position:relative;z-index:2}
-.nav-bar{background:#fff;border-bottom:1px solid #eee;display:flex;padding:0 20px;overflow-x:auto;position:sticky;top:54px;z-index:99}
+.nav-bar{background:#fff;border-bottom:1px solid #eee;display:flex;padding:0 20px;overflow-x:auto;position:sticky;top:54px;z-index:99;width:100%}
 .nav-item{padding:11px 16px;font-size:13px;cursor:pointer;color:#aaa;border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:all .15s;font-weight:500}
 .nav-item.active{color:#7DC242;border-bottom-color:#7DC242}.nav-item i{font-size:15px}
-.content{padding:20px;max-width:800px;margin:0 auto}
+.content{padding:20px;max-width:800px;margin:0 auto;width:100%}
 .alert{padding:10px 14px;border-radius:10px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px;font-size:13px}
 .alert i{font-size:16px;flex-shrink:0;margin-top:1px}
 .alert-red{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B}.alert-red i{color:#DC2626}
