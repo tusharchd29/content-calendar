@@ -814,14 +814,13 @@ export default function Home() {
           </div>
         </div>
         <div style={{paddingTop:54}}>
-          <div className="stats-bar">
-            <div className="stats-grid" style={{margin:0}}>
+          <div className="posting-sticky">
+            <div className="stats-grid" style={{margin:"0 0 10px 0",maxWidth:500}}>
             <div className="stat-card"><div className="stat-num">{total}</div><div className="stat-label">Total</div></div>
             <div className="stat-card"><div className="stat-num" style={{color:"#16A34A"}}>{dn}</div><div className="stat-label">Posted</div></div>
             <div className="stat-card"><div className="stat-num" style={{color:"#D97706"}}>{rem}</div><div className="stat-label">Pending</div></div>
             </div>
-          </div>
-            <div className="filter-row" style={{marginTop:10,marginBottom:0}}>
+            <div className="filter-row" style={{marginBottom:10}}>
               <select value={postFilterClient} onChange={e=>setPostFilterClient(e.target.value)}>
                 <option value="">All clients</option>
                 {clientNames.map(n=><option key={n}>{n}</option>)}
@@ -837,6 +836,7 @@ export default function Home() {
               style={{padding:"5px 8px",fontSize:12,border:"1px solid #ddd",borderRadius:7,background:"#fff",color:"#1a1a1a"}} title="To date"/>
               {(globalDateFrom||globalDateTo) && <button className="btn btn-sm" onClick={()=>{setGlobalDateFrom("");setGlobalDateTo("");}}>Clear</button>}
             </div>
+          </div>
           <div className="content">
           {loading ? <div className="loading"><span className="spinner"></span>Loading posts...</div> :
             filtered.length ? filtered.map(p=><PostingCard key={p.id} p={p} onMark={markPlatform}/>) :
@@ -1359,7 +1359,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .role-btn:hover{border-color:#7DC242}.role-btn.selected{border-color:#7DC242;background:#F3FBE8}
 .role-btn i{font-size:24px;display:block;margin-bottom:6px;color:#ccc}.role-btn.selected i{color:#7DC242}
 .role-btn span{font-size:13px;font-weight:600;display:block;color:#1a1a1a}.role-btn small{font-size:11px;color:#aaa}
-.topbar{background:#fff;border-bottom:1px solid #eee;padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;height:54px;overflow:hidden}.stats-bar{position:sticky;top:54px;z-index:98;background:rgba(242,245,238,0.97);padding:10px 20px;border-bottom:0.5px solid #d0d8c8}
+.topbar{background:#fff;border-bottom:1px solid #eee;padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;height:54px;overflow:hidden}.stats-bar{position:sticky;top:98px;z-index:98;background:rgba(242,245,238,0.97);padding:10px 20px;border-bottom:0.5px solid #d0d8c8}.posting-sticky{position:sticky;top:54px;z-index:98;background:rgba(242,245,238,0.97);padding:10px 20px 0;border-bottom:0.5px solid #d0d8c8}
 .topbar-logo{font-family:'Dancing Script',cursive;font-size:22px;font-weight:600;line-height:1;position:relative;z-index:2}
 .topbar-logo .lm{color:#7DC242}.topbar-logo .la{color:#29ABE2}
 .topbar-botanical{position:absolute;top:0;left:0;width:100%;height:54px;pointer-events:none;z-index:1}
