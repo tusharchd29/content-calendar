@@ -1491,9 +1491,9 @@ function TopbarBotanical() {
 
 // ── POSTING TEAM REPLACE SS BUTTON ───────────────────────────
 function ApproveDeclineButtons({postId, platformName, onApprove, onDecline}) {
-  const [declining, setDeclining] = React.useState(false);
-  const [comment, setComment] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
+  const [declining, setDeclining] = useState(false);
+  const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if(!declining) return (
     <div style={{display:"flex",gap:6}}>
